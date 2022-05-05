@@ -1,14 +1,29 @@
-{ stdenv, lib, fetchzip }:
+{ stdenv, lib, fetchzip, gmp, zlib, z3, ncurses5, ncurses6 }:
 
 let
-  mkPactDerivation = version: src:
-    stdenv.mkDerivation {
+  dynamic-linker = stdenv.cc.bintools.dynamicLinker;
+
+  patchelf = libPath:
+    if stdenv.isDarwin then
+      ""
+    else ''
+      chmod u+w $PACT
+      patchelf --interpreter ${dynamic-linker} --set-rpath ${libPath} $PACT
+      chmod u-w $PACT
+    '';
+
+  mkPactDerivation = { version, ncurses, src }:
+    stdenv.mkDerivation rec {
       inherit version src;
       pname = "pact";
+      buildInputs = [ zlib z3 gmp ncurses ];
+      libPath = lib.makeLibraryPath buildInputs;
+      dontStrip = true;
       installPhase = ''
         mkdir -p $out/bin
         PACT="$out/bin/pact"
         install -D -m555 -T pact $PACT
+        ${patchelf libPath}
       '';
       meta = {
         description = "Pact smart contract language";
@@ -23,8 +38,9 @@ let
   pact-versions = {
     # Versions follow the output of `pact --version`. Pact versions are somewhat
     # inconsistent: they are not always MAJOR.MINOR.PATCH.
-    pact-4_3 = let
+    pact-4_3 = mkPactDerivation rec {
       version = "4.3";
+      ncurses = ncurses6;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -37,10 +53,11 @@ let
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
           sha256 = "sha256-EQNK9MK3AD3mXMNHu04pVvQyALb3HL4ey+csFCY/mdQ=";
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-4_2_1 = let
+    pact-4_2_1 = mkPactDerivation rec {
       version = "4.2.1";
+      ncurses = ncurses6;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -51,12 +68,13 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
-          sha256 = "";
+          sha256 = "sha256-GmVvsMBamZ/70incmVKzTzmgXLNuOWco/z+vDGiFgTQ=";
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-4_2_0 = let
+    pact-4_2_0 = mkPactDerivation rec {
       version = "4.2.0";
+      ncurses = ncurses6;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -66,13 +84,14 @@ let
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-applications.8.10.7-ubuntu-20.04.zip";
-          sha256 = "";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-applications.8.10.7.ubuntu-20.04.zip";
+          sha256 = "sha256-VXx6WDaqlSfmLS2bJEBOlN+Oc2K0aQNWpIBdth3vnjc=";
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-4_1_1 = let
+    pact-4_1_1 = mkPactDerivation rec {
       version = "4.1.1";
+      ncurses = ncurses6;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -82,13 +101,14 @@ let
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-applications.8.10.7-ubuntu-20.04.zip";
-          sha256 = "";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-applications.8.10.7.ubuntu-20.04.zip";
+          sha256 = "sha256-sJ0J+UIO5FJXGcXgSkkPctdEIJjbBJ2GlJXu0K8AVbM=";
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-4_1 = let
+    pact-4_1 = mkPactDerivation rec {
       version = "4.1";
+      ncurses = ncurses6;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -99,12 +119,13 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
-          sha256 = "";
+          sha256 = "sha256-R13LUdPTRMSNERDfQNlPx0MubF6aMwdtPAO2NWiOyyo=";
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-4_0_1 = let
+    pact-4_0_1 = mkPactDerivation rec {
       version = "4.0.1";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -115,32 +136,34 @@ let
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
-          sha256 = "";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
+          sha256 = "sha256-8NXoyaHuz3RiKPTRFLhUavsdRJho6qbNEjSBBb0HI5c=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_7 = let
+    pact-3_7 = mkPactDerivation rec {
       version = "3.7";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}.0-osx.zip";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
           sha256 = "sha256-jvk6HkCZln/3IyuwU21AAuBfYBGuDgbER+2MuuBX83s=";
           stripRoot = false;
         }
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}.0-linux.zip";
-          sha256 = "";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
+          sha256 = "sha256-tvHj0oJxvbf+lCvU9mRHGjl3nKZRm77U8mELpJbypxs=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_5_1 = let
+    pact-3_5_1 = mkPactDerivation rec {
       version = "3.5.1";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -152,13 +175,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-F4pyw7eQR2ANeT1E1gi7suHWO3734tyeSUTHWfovHa8=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_5_0 = let
+    pact-3_5_0 = mkPactDerivation rec {
       version = "3.5.0";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -170,13 +194,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-Fjj63WvzK/VLSYdoW6cGKMtmx+YJ5dRvs7O/LKKbWmo=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_4_0 = let
+    pact-3_4_0 = mkPactDerivation rec {
       version = "3.4.0";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -188,13 +213,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-P9ALttXzwamfD9PTkixWngJ6uhmQi+0GX8GjFJ+rluw=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_3_1 = let
+    pact-3_3_1 = mkPactDerivation rec {
       version = "3.3.1";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -206,13 +232,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-lTmeRF910r6FBd4aXSPnjXIIgBGCi1sAlaJslpvOzE0=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_3_0 = let
+    pact-3_3_0 = mkPactDerivation rec {
       version = "3.3.0";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -224,13 +251,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-6t4JR6Mp70fwXYvXele28yEljOU7slSowWjTfJrmyIM=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_1_0 = let
+    pact-3_1_0 = mkPactDerivation rec {
       version = "3.1.0";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -242,13 +270,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-j+muNtkkRtasYBBplyi/83j9xYve6gvcdQ7FWP3STMQ=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_0_1 = let
+    pact-3_0_1 = mkPactDerivation rec {
       version = "3.0.1";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -260,13 +289,14 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-Vwd/NyqM1KIZivkwD2hOYs1pW/ZHvhlpxkkjgl5bnN4=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
 
-    pact-3_0 = let
+    pact-3_0 = mkPactDerivation rec {
       version = "3.0";
+      ncurses = ncurses5;
       src = if stdenv.isDarwin then
         fetchzip {
           url =
@@ -278,10 +308,11 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
-          sha256 = "";
+          sha256 = "sha256-niuONI+tLPO3S5IW/E3ZhmxUJueiLOzJPxwG8+rI81I=";
           stripRoot = false;
         };
-    in mkPactDerivation version src;
+    };
+
   };
 
 in pact-versions // { pact = pact-versions.${pact-latest}; }

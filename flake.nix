@@ -2,7 +2,7 @@
   description = "The Pact smart contract language";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
+    nixpkgs.url = "github:nixos/nixpkgs/master";
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -14,15 +14,16 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs { inherit system; };
       in {
-        defaultPackage = self.packages.${system}.pact;
         packages = pkgs.callPackages ./versions.nix { };
+        defaultPackage = self.packages.${system}.pact;
 
-        defaultApp = self.packages.${system}.pact;
         apps = self.packages;
+        defaultApp = self.packages.${system}.pact;
 
         checks = pkgs.lib.mapAttrs (name: pact-bin:
           pkgs.runCommand "pact" { buildInputs = [ pact-bin ]; } ''
             touch $out
+            echo ${name}
             PACT_VERSION=$(pact --version)
             EXPECTED_VERSION="pact version ${pact-bin.version}"
             echo "$PACT_VERSION should match expected output $EXPECTED_VERSION"
