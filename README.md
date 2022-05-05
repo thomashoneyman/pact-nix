@@ -1,6 +1,15 @@
 # Pact Nix
 
-This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language without having to build it from source.
+This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language without having to build it from source. You can use this repo in two ways:
+
+First, you can run `pact` on your machine from this flake. For example:
+
+```nix
+$ nix run github.com:thomashoneyman/pact-nix
+pact>
+```
+
+Second, you can import this Nix code in your own to make the various Pact binaries available. Instructions are in the next section.
 
 ## Installation
 
