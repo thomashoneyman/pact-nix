@@ -148,14 +148,14 @@ let
       src = if stdenv.isDarwin then
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            "https://github.com/kadena-io/pact/releases/download/v${version}.0/pact-${version}.0-osx.zip";
           sha256 = "sha256-jvk6HkCZln/3IyuwU21AAuBfYBGuDgbER+2MuuBX83s=";
           stripRoot = false;
         }
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
+            "https://github.com/kadena-io/pact/releases/download/v${version}.0/pact-${version}.0-linux.zip";
           sha256 = "sha256-tvHj0oJxvbf+lCvU9mRHGjl3nKZRm77U8mELpJbypxs=";
           stripRoot = false;
         };
