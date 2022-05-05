@@ -12,5 +12,8 @@
       in {
         defaultPackage = self.packages.${system}.pact;
         packages = pkgs.callPackages ./versions.nix { };
+
+        defaultApp = self.packages.${system}.pact;
+        apps = self.packages;
       });
 }
