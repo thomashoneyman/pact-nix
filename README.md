@@ -4,7 +4,7 @@ This repository helps you install the [Pact](https://github.com/kadena-io/pact) 
 
 First, you can run `pact` on your machine from this flake. For example:
 
-```nix
+```console
 $ nix run github.com:thomashoneyman/pact-nix
 pact>
 ```
