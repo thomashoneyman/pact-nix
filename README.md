@@ -6,7 +6,7 @@
 
 This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language without having to build it from source. You can use this repo in a few ways:
 
-First, you can run `pact` on your machine from this flake. For example:
+First, you can run `pact` on your machine from this flake or install it temporarily in your shell. For example:
 
 ```console
 $ nix run github:thomashoneyman/pact-nix
@@ -14,6 +14,13 @@ pact>
 
 # Or, use a particular version of Pact
 $ nix run github:thomashoneyman/pact-nix#pact-4_1_1
+
+# Or, get the executable in your shell temporarily
+$ which pact
+pact not found
+$ nix shell github:thomashoneyman/pact-nix
+$ which pact
+/nix/store/7yjmngdyrm06dcp8yxxnvn54sl5l6w2b-pact-4.3/bin/pact
 ```
 
 Second, legacy commands like `nix-build` and `nix-env` are supported. For example, you can install a particular version of Pact to your environment:
