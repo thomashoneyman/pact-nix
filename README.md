@@ -47,24 +47,26 @@ Copy and paste the resulting `rev` and `sha256` into your Nix code where you imp
 
 ## Usage
 
-Once you have `pact-nix` from this repository you can use the overlay to put all Pact versions into your `pkgs`, or you can use `pact-nix` to refer to a specific binary.
+Once you have `pact-nix` from this repository you can refer to specific Pact binaries.
 
-For example, using the overlay will put all Pact versions into your `pkgs`. Here it is in a Nix flake:
+For example, you can write an overlay to put a particular Pact version into your `pkgs`. Here is an example in a Nix flake:
 
 ```nix
-{ outputs = { nixpkgs, pact-nix, ... }:
+{
+  outputs = { nixpkgs, pact-nix, ... }:
     let
-      pkgs = import nixpkgs { overlays = [ pact-nix.overlay ]; };
+      pactOverlay = _: _: { pact = pact-nix.pact; };
+      pkgs = import nixpkgs { overlays = [ pactOverlay ]; };
     in
+      # Now `pact` is available in your `pkgs`.
       { devShell = pkgs.mkShell { buildInputs = [ pkgs.pact ]; };
-      }
+      };
 }
 ```
 
-The `pact` binary tracks the latest available version, but you can also refer to a specific version of Pact. Here's an example of using `pact-nix` to refer to a specific binary, in a non-Flakes file:
+The `pact` binary tracks the latest available version, but you can also refer to a specific version of Pact. Here's an example in a non-Flakes file:
 
 ```nix
-# shell.nix
 { pkgs }:
 
 let
@@ -72,6 +74,6 @@ let
 
 in
 pkgs.mkShell
-  { buildInputs = [ pkgs.pact-4_2_1 ];
+  { buildInputs = [ pact-nix.pact-4_2_1 ];
   }
 ```

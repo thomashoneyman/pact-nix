@@ -9,11 +9,8 @@
   outputs = { self, nixpkgs, utils, ... }:
     utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs { inherit system; };
-
       in {
         defaultPackage = self.packages.${system}.pact;
-        packages = {
-          pact = self.packages.${system}.pact-4_3;
-        } // pkgs.callPackages ./versions.nix { };
+        packages = pkgs.callPackages ./versions.nix { };
       });
 }
