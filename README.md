@@ -9,11 +9,11 @@ This repository helps you install the [Pact](https://github.com/kadena-io/pact) 
 First, you can run `pact` on your machine from this flake. For example:
 
 ```console
-$ nix run github.com:thomashoneyman/pact-nix
+$ nix run github:thomashoneyman/pact-nix
 pact>
 
 # Or, use a particular version of Pact
-$ nix run github.com:thomashoneyman/pact-nix#pact-4_1_1
+$ nix run github:thomashoneyman/pact-nix#pact-4_1_1
 ```
 
 Second, legacy commands like `nix-build` and `nix-env` are supported. For example, you can install a particular version of Pact to your environment:
