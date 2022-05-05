@@ -1,5 +1,7 @@
 # Pact Nix
 
+[![CI](https://github.com/thomashoneyman/pact-nix/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thomashoneyman/pact-nix/actions/workflows/ci.yml)
+
 > **WARNING**: This repo is unstable and experimental. Please file an issue if you have trouble installing `pact` via this repository.
 
 This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language without having to build it from source. You can use this repo in a few ways:
