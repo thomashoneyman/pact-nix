@@ -1,0 +1,30 @@
+name: "CI"
+
+on:
+  push: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest, macos-latest]
+    needs: "setup-environment"
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache nix store
+        uses: actions/cache@v3
+        env:
+          cache-name: nix-store-cache
+        with:
+          path: /nix/store
+          key: nix-store
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v17
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - run: nix build
+
+      - run: nix flake check

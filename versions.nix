@@ -121,19 +121,19 @@ let
         };
     in mkPactDerivation version src;
 
-    pact-3_7_0 = let
-      version = "3.7.0";
+    pact-3_7 = let
+      version = "3.7";
       src = if stdenv.isDarwin then
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}.0-osx.zip";
           sha256 = "sha256-jvk6HkCZln/3IyuwU21AAuBfYBGuDgbER+2MuuBX83s=";
           stripRoot = false;
         }
       else
         fetchzip {
           url =
-            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux.zip";
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}.0-linux.zip";
           sha256 = "";
           stripRoot = false;
         };
