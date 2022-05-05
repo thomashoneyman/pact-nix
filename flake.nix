@@ -14,18 +14,17 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
-        versions = pkgs.callPackages ./versions.nix { };
       in {
-        packages = versions;
-        defaultPackage = versions.pact;
+        packages = pkgs.callPackages ./versions.nix { };;
+        defaultPackage = self.packages.${system}.pact;
 
         apps = pkgs.lib.mapAttrs (name: pact-bin: {
           type = "app";
-          program = "${pact-bin}/bin/blender";
-        }) versions;
+          program = "${pact-bin}/bin/pact";
+        }) self.packages.${system};
         defaultApp = {
           type = "app";
-          program = "${versions.pact}/bin/pact";
+          program = "${self.packages.${system}.pact}/bin/pact";
         };
 
         checks = pkgs.lib.mapAttrs (name: pact-bin:
