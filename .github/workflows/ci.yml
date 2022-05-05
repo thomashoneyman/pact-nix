@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: [ubuntu-latest, macos-latest]
-    needs: "setup-environment"
     steps:
       - uses: actions/checkout@v3
 
