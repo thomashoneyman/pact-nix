@@ -15,7 +15,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
       in {
-        packages = pkgs.callPackages ./versions.nix { };;
+        packages = pkgs.callPackages ./versions.nix { };
         defaultPackage = self.packages.${system}.pact;
 
         apps = pkgs.lib.mapAttrs (name: pact-bin: {
