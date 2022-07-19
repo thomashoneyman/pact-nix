@@ -51,7 +51,7 @@ let
         fetchzip {
           url =
             "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
-          sha256 = "";
+          sha256 = "sha256-2qfJMvqfZ5na69VcGVmjcFLRNpsJhh3pemIiFQP4ymg=";
         };
     };
 
