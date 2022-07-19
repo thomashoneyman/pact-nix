@@ -33,11 +33,28 @@ let
     };
 
   # When a new Pact version comes out, this must be updated.
-  pact-latest = "pact-4_3";
+  pact-latest = "pact-4_3_1";
 
   pact-versions = {
     # Versions follow the output of `pact --version`. Pact versions are somewhat
     # inconsistent: they are not always MAJOR.MINOR.PATCH.
+    pact-4_3_1 = mkPactDerivation rec {
+      version = "4.3.1";
+      ncurses = ncurses6;
+      src = if stdenv.isDarwin then
+        fetchzip {
+          url =
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+          sha256 = "sha256-mgZwSHxJPVnQbWLK7/68eZeU/pIxMfVWYH7WNg69rqE=";
+        }
+      else
+        fetchzip {
+          url =
+            "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
+          sha256 = "";
+        };
+    };
+
     pact-4_3 = mkPactDerivation rec {
       version = "4.3";
       ncurses = ncurses6;
