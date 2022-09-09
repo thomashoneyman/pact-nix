@@ -18,9 +18,9 @@ $ nix run github:thomashoneyman/pact-nix#pact-4_1_1
 # Or, get the executable in your shell temporarily
 $ which pact
 pact not found
-$ nix shell github:thomashoneyman/pact-nix
-$ which pact
-/nix/store/7yjmngdyrm06dcp8yxxnvn54sl5l6w2b-pact-4.3/bin/pact
+$ nix develop github:thomashoneyman/pact-nix
+$ pact --version
+pact version 4.4
 ```
 
 Second, legacy commands like `nix-build` and `nix-env` are supported. For example, you can install a particular version of Pact to your environment:

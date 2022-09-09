@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/master";
-    flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
@@ -13,33 +12,50 @@
   outputs = {
     self,
     nixpkgs,
-    flake-utils,
     ...
-  }:
-    flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {inherit system;};
-    in {
-      packages = pkgs.callPackages ./versions.nix {};
-      defaultPackage = self.packages.${system}.pact;
+  }: let
+    supportedSystems = ["x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin"];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    nixpkgsFor = forAllSystems (system: import nixpkgs {inherit system;});
+  in {
+    packages = forAllSystems (system: let
+      pkgs = nixpkgsFor.${system};
+      pactPkgs = pkgs.callPackages ./versions.nix {};
+    in
+      pactPkgs // {default = pactPkgs.pact;});
 
-      apps =
-        pkgs.lib.mapAttrs (name: pact-bin: {
-          type = "app";
-          program = "${pact-bin}/bin/pact";
-        })
-        self.packages.${system};
+    apps = forAllSystems (
+      system: let
+        pkgs = nixpkgsFor.${system};
+        pactApps =
+          pkgs.lib.mapAttrs (name: pact-bin: {
+            type = "app";
+            program = "${pact-bin}/bin/pact";
+          })
+          self.packages.${system};
+      in
+        pactApps // {default = pactApps.pact;}
+    );
 
-      defaultApp = {
-        type = "app";
-        program = "${self.packages.${system}.pact}/bin/pact";
-      };
+    devShells = forAllSystems (
+      system: let
+        pkgs = nixpkgsFor.${system};
+      in {
+        default = pkgs.mkShell {
+          name = "pact-nix-${self.packages.${system}.default.version}";
+          buildInputs = [self.packages.${system}.default];
+        };
+      }
+    );
 
-      devShell = pkgs.mkShell {
-        name = "pact-nix";
-        buildInputs = [self.packages.${system}.pact];
-      };
+    defaultPackage = forAllSystems (system: self.packages.${system}.default);
+    defaultApp = forAllSystems (system: self.apps.${system}.default);
+    devShell = forAllSystems (system: self.devShells.${system}.default);
 
-      checks = pkgs.lib.mapAttrs (name: pact-bin:
+    checks = forAllSystems (system: let
+      pkgs = nixpkgsFor.${system};
+    in
+      pkgs.lib.mapAttrs (name: pact-bin:
         pkgs.runCommand "pact" {buildInputs = [pact-bin];} ''
           touch $out
           PACT_VERSION=$(pact --version)
@@ -47,6 +63,6 @@
           echo "$PACT_VERSION should match expected output $EXPECTED_VERSION"
           test "$PACT_VERSION" = "$EXPECTED_VERSION"
         '')
-      self.packages.${system};
-    });
+      self.packages.${system});
+  };
 }
