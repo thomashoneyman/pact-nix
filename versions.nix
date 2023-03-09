@@ -53,6 +53,9 @@
     # To update, copy/paste the derivation, update the version number, and set
     # the sha256 fields to empty strings. When you attempt to build the
     # derivation, Nix will tell you the correct sha256 to use.
+    #
+    # Beginning with Pact 4_6_0 the zip file contains more than just the
+    # Pact executable, so stripRoot is necessary for fetchzip.
     pact-4_6_0 = mkPactDerivation rec {
       version = "4.6.0";
       ncurses = ncurses6;
@@ -67,7 +70,7 @@
         else
           fetchzip {
             url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
-            sha256 = "";
+            sha256 = "sha256-2AqVCoxmqKZJeM/7LMjfyITmhVE1dXIN/3eoBjFR+S0=";
             stripRoot = false;
           };
     };
