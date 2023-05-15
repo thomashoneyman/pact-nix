@@ -48,10 +48,6 @@
       }
     );
 
-    defaultPackage = forAllSystems (system: self.packages.${system}.default);
-    defaultApp = forAllSystems (system: self.apps.${system}.default);
-    devShell = forAllSystems (system: self.devShells.${system}.default);
-
     checks = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
     in
