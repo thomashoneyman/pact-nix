@@ -61,15 +61,24 @@
 
     checks = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
-    in
-      pkgs.lib.mapAttrs (name: pact-bin:
+      pact = pkgs.lib.mapAttrs (name: pact-bin:
         pkgs.runCommand "pact" {buildInputs = [pact-bin];} ''
           touch $out
+          set -e
           PACT_VERSION=$(pact --version)
           EXPECTED_VERSION="pact version ${pact-bin.version}"
           echo "$PACT_VERSION should match expected output $EXPECTED_VERSION"
           test "$PACT_VERSION" = "$EXPECTED_VERSION"
         '')
-      (pkgs.lib.filterAttrs (name: value: getPrefix name == "pact") self.packages.${system}));
+      (pkgs.lib.filterAttrs (name: value: getPrefix name == "pact") self.packages.${system});
+      kda-tool = pkgs.lib.mapAttrs (name: kda-bin:
+        pkgs.runCommand "kda-tool" {buildInputs = [kda-bin];} ''
+          touch $out
+          set -e
+          kda keygen plain
+        '')
+      (pkgs.lib.filterAttrs (name: value: getPrefix name == "kda") self.packages.${system});
+    in
+      pact // kda-tool);
   };
 }
