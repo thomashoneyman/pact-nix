@@ -43,7 +43,7 @@
         then
           fetchzip {
             url = "https://github.com/kadena-io/kda-tool/releases/download/${version}/kda-tool-${version}-macOS.zip";
-            sha256 = "";
+            sha256 = "sha256-hHYInr5ww4KRGu06bwnh/rjFrqcRf5UFxTaNrXtO7aI=";
             stripRoot = false;
           }
         else
