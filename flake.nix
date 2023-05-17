@@ -71,13 +71,17 @@
           test "$PACT_VERSION" = "$EXPECTED_VERSION"
         '')
       (pkgs.lib.filterAttrs (name: value: getPrefix name == "pact") self.packages.${system});
-      kda-tool = pkgs.lib.mapAttrs (name: kda-bin:
-        pkgs.runCommand "kda-tool" {buildInputs = [kda-bin];} ''
-          touch $out
-          set -e
-          kda keygen plain
-        '')
-      (pkgs.lib.filterAttrs (name: value: getPrefix name == "kda") self.packages.${system});
+      kda-tool =
+        if pkgs.stdenv.isDarwin
+        then {}
+        else
+          pkgs.lib.mapAttrs (name: kda-bin:
+            pkgs.runCommand "kda-tool" {buildInputs = [kda-bin];} ''
+              touch $out
+              set -e
+              kda keygen plain
+            '')
+          (pkgs.lib.filterAttrs (name: value: getPrefix name == "kda") self.packages.${system});
     in
       pact // kda-tool);
   };
