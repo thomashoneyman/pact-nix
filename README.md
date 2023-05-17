@@ -4,22 +4,25 @@
 
 > **WARNING**: This repo is unstable and experimental. Please file an issue if you have trouble installing `pact` via this repository.
 
-This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language without having to build it from source. You can use this repo in a few ways:
+This repository helps you install the [Pact](https://github.com/kadena-io/pact) smart contract programming language and the [KDA Tool](https://github.com/kadena-io/kda-tool) CLI interface without having to build them from source. You can use this repo in a few ways.
 
 First, you can run `pact` on your machine from this flake or install it temporarily in your shell. For example:
 
 ```console
-$ nix run github:thomashoneyman/pact-nix
+# Run the latest version of Pact
+$ nix run github:thomashoneyman/pact-nix#pact
 pact>
 
-# Or, use a particular version of Pact
-$ nix run github:thomashoneyman/pact-nix#pact-4_1_1
+# Run the latest version of KDA Tool
+$ nix run github:thomashoneyman/pact-nix#kda
 
-# Or, get the executable in your shell temporarily
-$ which pact
-pact not found
+# Or, use a particular version
+$ nix run github:thomashoneyman/pact-nix#pact-4_1_1
+$ nix run github:thomashoneyman/pact-nix#kda-1_1
+
+# Or, get the executables in your shell temporarily
 $ nix develop github:thomashoneyman/pact-nix
-$ pact --version
+$ pact --version && kda --version
 pact version 4.4
 ```
 

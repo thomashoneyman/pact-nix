@@ -8,14 +8,12 @@
   ncurses5,
   ncurses6,
 }: let
-  dynamic-linker = stdenv.cc.bintools.dynamicLinker;
-
   patchelf = libPath:
     if stdenv.isDarwin
     then ""
     else ''
       chmod u+w $PACT
-      patchelf --interpreter ${dynamic-linker} --set-rpath ${libPath} $PACT
+      patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} --set-rpath ${libPath} $PACT
       chmod u-w $PACT
     '';
 
@@ -25,15 +23,14 @@
     src,
   }:
     stdenv.mkDerivation rec {
-      inherit version src;
       pname = "pact";
+      inherit version src;
       buildInputs = [zlib z3 gmp ncurses];
       libPath = lib.makeLibraryPath buildInputs;
       dontStrip = true;
       installPhase = ''
-        mkdir -p $out/bin
         PACT="$out/bin/pact"
-        install -D -m555 -T pact $PACT
+        install -D -m755 -T pact $PACT
         ${patchelf libPath}
       '';
       meta = {

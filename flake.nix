@@ -17,24 +17,32 @@
     supportedSystems = ["x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin"];
     forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
     nixpkgsFor = forAllSystems (system: import nixpkgs {inherit system;});
+
+    getPrefix = s:
+      if builtins.substring 0 3 s == "kda"
+      then "kda"
+      else if builtins.substring 0 4 s == "pact"
+      then "pact"
+      else null;
   in {
     packages = forAllSystems (system: let
       pkgs = nixpkgsFor.${system};
-      pactPkgs = pkgs.callPackages ./versions.nix {};
+      pact = pkgs.callPackages ./versions-pact.nix {};
+      kda = pkgs.callPackages ./versions-kda-tool.nix {};
     in
-      pactPkgs // {default = pactPkgs.pact;});
+      kda // pact // {default = pact.pact;});
 
     apps = forAllSystems (
       system: let
         pkgs = nixpkgsFor.${system};
-        pactApps =
-          pkgs.lib.mapAttrs (name: pact-bin: {
+        apps =
+          pkgs.lib.mapAttrs (name: bin: {
             type = "app";
-            program = "${pact-bin}/bin/pact";
+            program = "${bin}/bin/${getPrefix name}";
           })
           self.packages.${system};
       in
-        pactApps // {default = pactApps.pact;}
+        apps // {default = apps.pact;}
     );
 
     devShells = forAllSystems (
@@ -42,8 +50,11 @@
         pkgs = nixpkgsFor.${system};
       in {
         default = pkgs.mkShell {
-          name = "pact-nix-${self.packages.${system}.default.version}";
-          buildInputs = [self.packages.${system}.default];
+          name = "pact-nix";
+          buildInputs = [
+            self.packages.${system}.pact
+            self.packages.${system}.kda-tool
+          ];
         };
       }
     );
@@ -59,6 +70,6 @@
           echo "$PACT_VERSION should match expected output $EXPECTED_VERSION"
           test "$PACT_VERSION" = "$EXPECTED_VERSION"
         '')
-      self.packages.${system});
+      (pkgs.lib.filterAttrs (name: value: getPrefix name == "pact") self.packages.${system}));
   };
 }
