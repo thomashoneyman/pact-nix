@@ -41,7 +41,7 @@
     };
 
   # When a new Pact version comes out, this must be updated.
-  pact-latest = "pact-4_7_0";
+  pact-latest = "pact-4_8";
 
   pact-versions = {
     # Versions follow the output of `pact --version`. Pact versions are somewhat
@@ -50,6 +50,44 @@
     # To update, copy/paste the derivation, update the version number, and set
     # the sha256 fields to empty strings. When you attempt to build the
     # derivation, Nix will tell you the correct sha256 to use.
+    pact-4_8 = mkPactDerivation rec {
+      version = "4.8";
+      ncurses = ncurses6;
+      src =
+        if stdenv.isDarwin
+        then
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            sha256 = "";
+            stripRoot = false;
+          }
+        else
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
+            sha256 = "sha256-zXNv6A/PKwyC5Sl4rdar5Dc4C9dbyFnOb04+jwNDBbI=";
+            stripRoot = false;
+          };
+    };
+
+    pact-4_7_1 = mkPactDerivation rec {
+      version = "4.7.1";
+      ncurses = ncurses6;
+      src =
+        if stdenv.isDarwin
+        then
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            sha256 = "";
+            stripRoot = false;
+          }
+        else
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-20.04.zip";
+            sha256 = "sha256-LS7HxFikHqZJxhlil7NDkeHhLO62/YNQygHWWYEeNwE=";
+            stripRoot = false;
+          };
+    };
+
     pact-4_7_0 = mkPactDerivation rec {
       version = "4.7.0";
       ncurses = ncurses6;

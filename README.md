@@ -18,7 +18,7 @@ $ nix run github:thomashoneyman/pact-nix#kda-tool
 Missing: COMMAND
 
 # Or, use a particular version
-$ nix run github:thomashoneyman/pact-nix#pact-4_1_1
+$ nix run github:thomashoneyman/pact-nix#pact-4_7_1
 $ nix run github:thomashoneyman/pact-nix#kda-tool-1_1
 
 # Or, get the executables in your shell temporarily
