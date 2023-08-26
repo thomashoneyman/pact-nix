@@ -58,7 +58,7 @@
         then
           fetchzip {
             url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
-            sha256 = "";
+            sha256 = "sha256-/jxfeg7/NnoIRvk5JKRZZCAVlJef1TgK+eNVWrtgCuE=";
             stripRoot = false;
           }
         else
@@ -77,7 +77,7 @@
         then
           fetchzip {
             url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
-            sha256 = "";
+            sha256 = "sha256-G9hxRFIReS6oBm1TavPAK9m6YK4kXmZ+DMD+kI0fx7A=";
             stripRoot = false;
           }
         else
