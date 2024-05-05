@@ -61,7 +61,7 @@
         then
           fetchzip {
             url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-osx.zip";
-            sha256 = "";
+            sha256 = "sha256-V++AmRiyS7fEf4KRynXrmP50igWaFgsht5ufUObHRTM=";
             stripRoot = false;
           }
         else
