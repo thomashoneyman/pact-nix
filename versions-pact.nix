@@ -7,6 +7,7 @@
   z3,
   ncurses5,
   ncurses6,
+  openssl,
 }: let
   patchelf = libPath:
     if stdenv.isDarwin
@@ -20,12 +21,13 @@
   mkPactDerivation = {
     version,
     ncurses,
+    extraBuildInputs ? [],
     src,
   }:
     stdenv.mkDerivation rec {
       pname = "pact";
       inherit version src;
-      buildInputs = [zlib z3 gmp ncurses];
+      buildInputs = [zlib z3 gmp ncurses] ++ extraBuildInputs;
       libPath = lib.makeLibraryPath buildInputs;
       dontStrip = true;
       installPhase = ''
@@ -41,7 +43,7 @@
     };
 
   # When a new Pact version comes out, this must be updated.
-  pact-latest = "pact-4_8";
+  pact-latest = "pact-4_11_0";
 
   pact-versions = {
     # Versions follow the output of `pact --version`. Pact versions are somewhat
@@ -50,6 +52,64 @@
     # To update, copy/paste the derivation, update the version number, and set
     # the sha256 fields to empty strings. When you attempt to build the
     # derivation, Nix will tell you the correct sha256 to use.
+    pact-4_11_0 = mkPactDerivation rec {
+      version = "4.11.0";
+      ncurses = ncurses6;
+      extraBuildInputs = [openssl];
+      src =
+        if stdenv.isDarwin
+        then
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            sha256 = "";
+            stripRoot = false;
+          }
+        else
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            sha256 = "sha256-BzIlHepQMgbDrQE3omOmUSBKmaloizXJfF6U9Kkf8Rs=";
+            stripRoot = false;
+          };
+    };
+
+    pact-4_10_0 = mkPactDerivation rec {
+      version = "4.10.0";
+      ncurses = ncurses6;
+      src =
+        if stdenv.isDarwin
+        then
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            sha256 = "";
+            stripRoot = false;
+          }
+        else
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            sha256 = "sha256-EU4d7Kqi37Zv6Z8baTZBvmvIet17g+cKmg7fS/ql6lg=";
+            stripRoot = false;
+          };
+    };
+
+    pact-4_9_0 = mkPactDerivation rec {
+      version = "4.9.0";
+      ncurses = ncurses6;
+      src =
+        if stdenv.isDarwin
+        then
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            sha256 = "";
+            stripRoot = false;
+          }
+        else
+          fetchzip {
+            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            sha256 = "sha256-amBD7QGcEgqStG61sxQmkduXLsPz6DFF8rA7Nd8BHas=";
+            stripRoot = false;
+          };
+    };
+
     pact-4_8 = mkPactDerivation rec {
       version = "4.8";
       ncurses = ncurses6;
