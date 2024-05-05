@@ -30,10 +30,6 @@
       buildInputs = [zlib z3 gmp ncurses] ++ extraBuildInputs;
       libPath = lib.makeLibraryPath buildInputs;
       dontStrip = true;
-      preFixup = lib.optionalString stdenv.isDarwin ''
-        install_name_tool -change /usr/local/opt/openssl@3/lib/libcrypto.3.dylib ${openssl.out}/lib/libcrypto.3.dylib $out/bin/pact
-        export DYLD_LIBRARY_PATH="${openssl.out}/lib:$DYLD_LIBRARY_PATH"
-      '';
       installPhase = ''
         PACT="$out/bin/pact"
         install -D -m755 -T pact $PACT
