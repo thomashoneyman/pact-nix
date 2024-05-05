@@ -60,13 +60,13 @@
         if stdenv.isDarwin
         then
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-osx.zip";
             sha256 = "";
             stripRoot = false;
           }
         else
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-linux-22.04.zip";
             sha256 = "sha256-BzIlHepQMgbDrQE3omOmUSBKmaloizXJfF6U9Kkf8Rs=";
             stripRoot = false;
           };
@@ -79,13 +79,13 @@
         if stdenv.isDarwin
         then
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-osx.zip";
             sha256 = "";
             stripRoot = false;
           }
         else
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-linux-22.04.zip";
             sha256 = "sha256-EU4d7Kqi37Zv6Z8baTZBvmvIet17g+cKmg7fS/ql6lg=";
             stripRoot = false;
           };
@@ -98,13 +98,13 @@
         if stdenv.isDarwin
         then
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-osx.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-osx.zip";
             sha256 = "";
             stripRoot = false;
           }
         else
           fetchzip {
-            url = "https://github.com/kadena-io/pact/releases/download/v${version}/pact-${version}-linux-22.04.zip";
+            url = "https://github.com/kadena-io/pact/releases/download/v${version + ".0"}/pact-${version + ".0"}-linux-22.04.zip";
             sha256 = "sha256-amBD7QGcEgqStG61sxQmkduXLsPz6DFF8rA7Nd8BHas=";
             stripRoot = false;
           };
