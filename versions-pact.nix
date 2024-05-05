@@ -43,7 +43,7 @@
     };
 
   # When a new Pact version comes out, this must be updated.
-  pact-latest = "pact-4_11_0";
+  pact-latest = "pact-4_11";
 
   pact-versions = {
     # Versions follow the output of `pact --version`. Pact versions are somewhat
@@ -52,8 +52,8 @@
     # To update, copy/paste the derivation, update the version number, and set
     # the sha256 fields to empty strings. When you attempt to build the
     # derivation, Nix will tell you the correct sha256 to use.
-    pact-4_11_0 = mkPactDerivation rec {
-      version = "4.11.0";
+    pact-4_11 = mkPactDerivation rec {
+      version = "4.11";
       ncurses = ncurses6;
       extraBuildInputs = [openssl];
       src =
@@ -72,8 +72,8 @@
           };
     };
 
-    pact-4_10_0 = mkPactDerivation rec {
-      version = "4.10.0";
+    pact-4_10 = mkPactDerivation rec {
+      version = "4.10";
       ncurses = ncurses6;
       src =
         if stdenv.isDarwin
@@ -91,8 +91,8 @@
           };
     };
 
-    pact-4_9_0 = mkPactDerivation rec {
-      version = "4.9.0";
+    pact-4_9 = mkPactDerivation rec {
+      version = "4.9";
       ncurses = ncurses6;
       src =
         if stdenv.isDarwin
